@@ -22,17 +22,23 @@ namespace Shop.Repository
             return category;
         }
 
-        public async Task<bool> DeleteAsync(string name)
+        public async Task<bool> DeleteAsync(Guid categoryId)
         {
-            var category = await _db.Categories.FirstOrDefaultAsync(c => c.Name == name);
+            var category = await GetCategoryByIdAsync(categoryId);
 
             if (category == null)
             {
                 return false;
             }
-
-            _db.Categories.Remove(category);
-            return (await _db.SaveChangesAsync()) > 0;
+            try
+            {
+                _db.Categories.Remove(category);
+                return (await _db.SaveChangesAsync()) > 0;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return false;
+            }
         }
 
         public async Task<IEnumerable<Category>> GetAllAsync()
@@ -43,6 +49,17 @@ namespace Shop.Repository
         public async Task<Category> GetCategoryByNameAsync(string name)
         {
             var category = await _db.Categories.FirstOrDefaultAsync(c => c.Name == name);
+            if (category == null)
+            {
+                return new Category();
+            }
+
+            return category;
+        }
+
+        public async Task<Category> GetCategoryByIdAsync(Guid categoryId)
+        {
+            var category = await _db.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
             if (category == null)
             {
                 return new Category();

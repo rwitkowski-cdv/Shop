@@ -17,12 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\Category_Pages\" />
     <Folder Include="Components\Pages\Product_Pages\" />
-    <Folder Include="Extensions\" />
     <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
 </Project>

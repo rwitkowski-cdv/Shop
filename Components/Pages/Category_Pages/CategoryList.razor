@@ -1,0 +1,113 @@
+﻿@page "/category"
+@inject ICategoryRepository _categoryRepository
+@inject IJSRuntime _jsRuntime
+
+<PopUpModal OnModalConfirm="ConfirmDeleteCategory" 
+    ButtonStyle="btn-danger" 
+    ButtonText="Delete" 
+    Title="For sure you want to delete ?">
+</PopUpModal>
+
+
+@if (IsLoading)
+{
+    <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
+        <img src="/images/loading_page.png" alt="loading" />
+    </div>
+}
+else
+{
+    <div class="card shadow boarder-0 mt-4">
+        <div class="card-header bg-black bg-gradient ml-0 py-3"> 
+            <div class="row">
+                <div class="col-12 text-center"> 
+                    <h2 class="text-white py-2">Category List</h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <div class="row pb-3">
+                <div class="col-12 text-end"> 
+                    <a href="category/create" class="btn btn-lg btn-primary" style="width:300px">
+                        <i class="bi bi-plus-square-fill"></i>
+                        Create New Category
+                    </a>
+                </div>
+            </div>
+            @if(Categories.Any())
+            {
+                <table class="table table-border table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Categories)
+                        {
+                            <tr>
+                                <td>@category.Name.</td>
+                                <td>
+                                    <a href=@($"category/update{category.Id}") class="btn btn-primary">
+                                        <i class="bi bi-pencil-square"></i>
+                                        Edit
+                                    </a>
+                                    <button class="btn btn-danger" @onclick="() => HandleDelete(category.Id)">
+                                        <i class="bi bi-trash3-fill"></i>
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+    }
+
+@code {
+    private bool IsLoading { get; set; } = true;    
+    private IEnumerable<Category> Categories { get; set; } = new List<Category>();
+    private Guid _idToDelete { get; set; } = Guid.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firsRender)
+    {
+        if (firsRender)
+        {
+            await LoadCategories();
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadCategories()
+    {
+        Categories = await _categoryRepository.GetAllAsync();
+    }
+    private async Task HandleDelete(Guid categoryId)
+    {
+        _idToDelete = categoryId;
+        await _jsRuntime.InvokeVoidAsync("showPopUpModal");
+    }
+
+    private async Task ConfirmDeleteCategory(bool isConfirmed)
+    {
+        IsLoading = true;
+        await _jsRuntime.InvokeVoidAsync("hidePopUpModal");
+        if(isConfirmed && _idToDelete != Guid.Empty)
+        {
+            var res = await _categoryRepository.DeleteAsync(_idToDelete);
+            if(res)
+                await _jsRuntime.ShowSuccessNotification("Deleted Successfully");
+            else
+                await _jsRuntime.ShowErrorNotification("Deleted error");
+
+            await LoadCategories();
+        }
+        _idToDelete = Guid.Empty;
+        IsLoading = false;
+
+    }
+
+}
