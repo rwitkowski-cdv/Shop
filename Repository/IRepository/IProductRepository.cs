@@ -6,8 +6,9 @@ namespace Shop.Repository.IRepository
     {
         public Task<Product> CreateAsync(Product product);
         public Task<Product> UpdateAsync(Product product);
-        public Task<bool> DeleteAsync(string name);
-        public Task<Product> GetProductsByNameAsync(string name);
+        public Task<bool> DeleteAsync(Guid productId);
+        public Task<Product> GetProductByNameAsync(string name);
+        public Task<Product> GetProductByIdAsync(Guid productId);
         public Task<IEnumerable<Product>> GetAllAsync();
     }
 }

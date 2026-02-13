@@ -3,18 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shop.Models
 {
-    public class Product
+    public class Product : BaseModel
     {
-        public Guid Id { get; set; }
-        [Required]
-        public string Name { get; set; }
         public string? SKU { get; set; }
         public string? ImageUrl { get; set; }
-        [Range(0.01, 1000)]
+        [Range(0.01, 10000000)]
         public decimal GrossAmount { get; set; }
-        [Range(0.01, 1000)]
+        [Range(0.01, 10000000)]
         public decimal NetAmount { get; set; }
-        [Range(0.01, 1000)]
+        [Range(0.01, 10000000)]
         public decimal TaxAmount { get; set; }
         public string? Description { get; set; }
         public bool IsAvailable { get; set; }

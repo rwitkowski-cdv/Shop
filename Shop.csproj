@@ -17,9 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\Product_Pages\" />
-    <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
+    <Folder Include="wwwroot\images\product\" />
   </ItemGroup>
 
 </Project>

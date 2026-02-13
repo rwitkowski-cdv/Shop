@@ -6,6 +6,7 @@ using Shop.Components.Account;
 using Shop.Data;
 using Shop.Repository;
 using Shop.Repository.IRepository;
+using Shop.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,10 @@ builder.Services.AddRazorComponents()
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<FileService>();
+//builder.Services.AddScoped<CategoryService>();
+//builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 

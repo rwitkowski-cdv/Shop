@@ -18,15 +18,23 @@ namespace Shop.Data
 
             var fakeCategorySeed = new Faker<Category>()
                 .RuleFor(c => c.Id, f => f.Random.Guid())
+                .RuleFor(c => c.CreatedOn, f => DateTime.Now)
+                .RuleFor(c => c.CreatedById, f => f.Random.Guid())
+                .RuleFor(c => c.ModifiedOn, f => DateTime.Now)
+                .RuleFor(c => c.ModifiedById, f => f.Random.Guid())
                 .RuleFor(c => c.Name, f => f.Commerce.Categories(1)[0]);
 
             var fakeCategoriesGenerate = fakeCategorySeed.Generate(10);
 
             var fakeProductSeed = new Faker<Product>()
                 .RuleFor(p => p.Id, f => f.Random.Guid())
+                .RuleFor(p => p.CreatedOn, f => DateTime.Now)
+                .RuleFor(p => p.CreatedById, f => f.Random.Guid())
+                .RuleFor(p => p.ModifiedOn, f => DateTime.Now)
+                .RuleFor(p => p.ModifiedById, f => f.Random.Guid())
                 .RuleFor(p => p.Name, f => f.Commerce.ProductName())
                 .RuleFor(p => p.SKU, f => f.Commerce.Ean13())
-                .RuleFor(p => p.ImageUrl, f => f.Image.PicsumUrl())
+                .RuleFor(p => p.ImageUrl, f => f.Image.LoremFlickrUrl(640,480, keywords: "computer"))
                 .RuleFor(p => p.GrossAmount, f => decimal.Parse(f.Commerce.Price(1, 1000)))
                 .RuleFor(p => p.NetAmount, (f, p) => Math.Round(p.GrossAmount / 1.2m, 2))
                 .RuleFor(p => p.TaxAmount, (f, p) => Math.Round(p.GrossAmount - p.NetAmount, 2))
@@ -39,6 +47,12 @@ namespace Shop.Data
 
             builder.Entity<Category>().HasData(fakeCategoriesGenerate);
             builder.Entity<Product>().HasData(fakeProductGenerate);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.ConfigureWarnings(w =>
+                w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
         }
     }
 }
