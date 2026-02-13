@@ -73,9 +73,9 @@ else
                     </div>
 
 
-                    <div class="form-floating py-3 col-12">
-                        <InputCheckbox @bind-Value="_product.IsAvailable" class="form-control" id="IsAvailable" placeholder="IsAvailable" />
-                        <label for="IsAvailable">IsAvailable</label>
+                    <div class="form-check py-3 col-12">
+                        <InputCheckbox @bind-Value="_product.IsAvailable" class="form-check-input" id="IsAvailable" placeholder="IsAvailable" />
+                        <label class="form-check-label" for="IsAvailable">IsAvailable</label>
                         <ValidationMessage For="@(() => _product.IsAvailable)" />
                     </div>
 
