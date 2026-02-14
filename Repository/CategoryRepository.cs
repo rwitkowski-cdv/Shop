@@ -15,8 +15,10 @@ namespace Shop.Repository
             _db = db;
         }
 
-        public async Task<Category> CreateAsync(Category category)
+        public async Task<Category> CreateAsync(Category category, string userId)
         {
+            category.CreatedOn = DateTime.UtcNow;
+            category.CreatedById = Guid.Parse(userId);
             await _db.Categories.AddAsync(category);
             await _db.SaveChangesAsync();
             return category;
@@ -68,11 +70,13 @@ namespace Shop.Repository
             return category;
         }
 
-        public async Task<Category> UpdateAsync(Category category)
+        public async Task<Category> UpdateAsync(Category category, string userId)
         {
             var categoryFromDb = await _db.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
             if (categoryFromDb != null)
             {
+                categoryFromDb.ModifiedOn = DateTime.UtcNow;
+                categoryFromDb.ModifiedById = Guid.Parse(userId);
                 categoryFromDb.Name = category.Name;
                 _db.Categories.Update(categoryFromDb);
                 await _db.SaveChangesAsync();

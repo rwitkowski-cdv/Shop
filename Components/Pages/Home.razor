@@ -1,7 +1,11 @@
 ﻿@page "/"
-@using System.Threading.Tasks
 @inject ProductService _productService
 @inject CategoryService _categoryService
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject IJSRuntime _jsRuntime
+@inject NavigationManager _navigationManager
+@inject IShoppingCartRepository _shoppingCartRepository
+
 <PageTitle>Home</PageTitle>
 
 @if (_isLoading)
@@ -72,7 +76,9 @@ else
                                 <h5 class="card-title text-center lead text-success">@product.Name</h5>
                                 <p class="card-text mt-2">@((MarkupString)@product.Description) </p>
                                 <h4 class="text-center">
-                                    <i class="bi bi-cart3 btn btn-success text-right  px-5 form-control">Add to cart</i>
+                                    <div class="m-lg-auto p-2" @onclick="()=>AddToCartItem(product)">
+                                        <i class="bi bi-cart3 btn btn-success text-right  px-5 form-control">Add to cart</i>
+                                    </div>
                                 </h4>
                                 <div class="d-flex justify-content-end p-2">
                                     <i class="bi bi-tag"> @product.Tag</i>
@@ -92,6 +98,7 @@ else
     private bool _isLoading { get; set; } = true;
     private Guid _selectedCategoryId = Guid.Empty;
     private string _searchText = string.Empty;
+    private const int updateByValue = 1;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -141,6 +148,32 @@ else
     private string GetActiveCategory(Guid categoryId)
     {
         return categoryId == _selectedCategoryId ? "active" : string.Empty;
+    }
+
+    private async Task AddToCartItem(Product product)
+    {
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+        var isAuthenticated = user.Identity?.IsAuthenticated ?? false;
+        if (!isAuthenticated)
+        {
+            _navigationManager.NavigateTo("/Account/Login", forceLoad: true);
+            return;
+        }
+        else
+        {
+            var result = await _shoppingCartRepository.UpdateCartAsync(userId, product.Id, updateByValue);
+            
+            if (result)
+                {
+                    await _jsRuntime.ShowSuccessNotification("Added to cart");
+                }
+                else
+                {
+                    await _jsRuntime.ShowErrorNotification("Failed to add to cart");
+            }
+        }
     }
 
 }

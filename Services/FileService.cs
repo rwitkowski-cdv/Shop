@@ -14,7 +14,7 @@ namespace Shop.Services
 
         public async Task<string> AddImageToRoot(InputFileChangeEventArgs e, string directoryPath)
         {
-            return await _imageRepository.AddtoRoot(e, directoryPath);
+            return await _imageRepository.AddToRoot(e, directoryPath);
         }
 
         public async Task DeleteImage(string directoryPath, string imgUrl)

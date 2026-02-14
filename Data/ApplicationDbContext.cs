@@ -9,6 +9,9 @@ namespace Shop.Data
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<ShoppingCart> ShoppingCart { get; set; }
+        public DbSet<OrderHeader> OrderHeader{ get; set; }
+        public DbSet<OrderDetail> OrderDetail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -47,6 +50,8 @@ namespace Shop.Data
 
             builder.Entity<Category>().HasData(fakeCategoriesGenerate);
             builder.Entity<Product>().HasData(fakeProductGenerate);
+            builder.Entity<ShoppingCart>().Ignore(c => c.Name);        
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -17,10 +17,10 @@ namespace Shop.Repository
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<Product> CreateAsync(Product product)
+        public async Task<Product> CreateAsync(Product product, string userId)
         {
             product.CreatedOn = DateTime.UtcNow;
-            product.CreatedById = Guid.NewGuid();
+            product.CreatedById = Guid.Parse(userId);
             await _dbContext.Products.AddAsync(product);
             await _dbContext.SaveChangesAsync();
             return product;
@@ -76,13 +76,13 @@ namespace Shop.Repository
             return product;
         }
 
-        public async Task<Product> UpdateAsync(Product product)
+        public async Task<Product> UpdateAsync(Product product, string userId)
         {
             var productFromDb = await _dbContext.Products.FirstOrDefaultAsync(c => c.Id == product.Id);
             if (productFromDb != null)
             {
                 productFromDb.ModifiedOn = DateTime.UtcNow;
-                productFromDb.ModifiedById = Guid.NewGuid();
+                productFromDb.ModifiedById = Guid.Parse(userId);
                 productFromDb.Name = product.Name;
                 productFromDb.SKU = product.SKU;
                 productFromDb.ImageUrl = product.ImageUrl;

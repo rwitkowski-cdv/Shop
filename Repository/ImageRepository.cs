@@ -14,7 +14,7 @@ namespace Shop.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<string> AddtoRoot(InputFileChangeEventArgs e, string directoryPath)
+        public async Task<string> AddToRoot(InputFileChangeEventArgs e, string directoryPath)
         {
             var file = e.File;
             FileInfo fileInfo = new(file.Name);

@@ -6,6 +6,7 @@
 @inject NavigationManager _navigationManager
 @inject IWebHostEnvironment _webHostEnvironment
 @inject IJSRuntime _jsRuntime
+@inject AuthenticationStateProvider _authenticationStateProvider
 
 @if (IsLoading)
 {
@@ -175,15 +176,18 @@ else
     private async Task UpsertProduct()
     {
         IsLoading = true;
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
 
         if (_product.Id == Guid.Empty)
         {
-            await _productRepository.CreateAsync(_product);
+            await _productRepository.CreateAsync(_product, userId);
             await _jsRuntime.ShowSuccessNotification("Added Successfully");
         }
         else
         {
-            await _productRepository.UpdateAsync(_product); 
+            await _productRepository.UpdateAsync(_product, userId);
             await _jsRuntime.ShowSuccessNotification("Updated Successfully");
 
         }

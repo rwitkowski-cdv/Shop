@@ -7,6 +7,6 @@ namespace Shop.Repository.IRepository
     {
         Task Delete(string directoryPath, string imgUrl);
 
-        Task<string> AddtoRoot(InputFileChangeEventArgs e, string directoryPath);
+        Task<string> AddToRoot(InputFileChangeEventArgs e, string directoryPath);
     }
 }
