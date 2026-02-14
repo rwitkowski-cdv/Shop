@@ -48,10 +48,11 @@ namespace Shop.Repository
             return (await _dbContext.SaveChangesAsync()) > 0;
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync()
+        public async Task<IEnumerable<Product>> GetAllAvailableAsync()
         {
             return await _dbContext.Products
                                     .Include(p => p.Category)
+                                    .Where(p => p.IsAvailable == true)
                                     .ToListAsync();
         }
 

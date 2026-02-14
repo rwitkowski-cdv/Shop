@@ -14,18 +14,18 @@ namespace Shop.Services
 
         public async Task<IEnumerable<Product>> GetProductsAsync() 
         {
-            return await _productRepository.GetAllAsync();
+            return await _productRepository.GetAllAvailableAsync();
         }
 
         public async Task<List<Product>> FilterProductsByCategoryAsync(Guid categoryId)
         {
-            return (await _productRepository.GetAllAsync()).Where(p => p.CategoryId == categoryId).ToList();
+            return (await _productRepository.GetAllAvailableAsync()).Where(p => p.CategoryId == categoryId).ToList();
         }
 
         public async Task<List<Product>> FilterProductsByNameAsync(string searchText)
         {
             
-            return (await _productRepository.GetAllAsync()).Where(p => p.Name.Contains(searchText,StringComparison.InvariantCultureIgnoreCase)).ToList();
+            return (await _productRepository.GetAllAvailableAsync()).Where(p => p.Name.Contains(searchText,StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
     }
 }

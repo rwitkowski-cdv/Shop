@@ -4,10 +4,10 @@ namespace Shop.Models
 {
     public class OrderDetail : BaseModel
     {
-        public int OrderHeaderId { get; set; }
+        public Guid OrderHeaderId { get; set; }
         public OrderHeader OrderHeader { get; set; }
 
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
         public Product Product { get; set; }
 
         [Required]

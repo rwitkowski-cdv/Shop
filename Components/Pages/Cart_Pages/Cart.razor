@@ -4,6 +4,9 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 @* @inject NavigationManager _navigationManager *@
 @inject IShoppingCartRepository _shoppingCartRepository
+@inject IOrderFactory _orderFactory
+@inject IOrderRepository _orderRepository
+@inject NavigationManager _navigationManager
 @attribute [Authorize]
 
 @if (_isLoading)
@@ -161,12 +164,17 @@ else
 
     private async Task UpdateCartItem(Guid productId, int updateByValue)
     {      
-            var result = await _shoppingCartRepository.UpdateCartAsync(OrderHeader.UserId, productId, updateByValue);
-            await LoadCart();
+        var result = await _shoppingCartRepository.UpdateCartAsync(OrderHeader.UserId, productId, updateByValue);
+        await LoadCart();
     }
 
     private async Task OrderCreationProcess()
     {
-
+        _isLoading = true;
+        await Task.Yield();
+        OrderHeader.OrderDetails = _orderFactory.CreateOrderDetails(ShoppingCarts.ToList());
+        await _orderRepository.CreateAsync(OrderHeader);
+        await _shoppingCartRepository.ClearCartAsync(OrderHeader.UserId);
+        _navigationManager.NavigateTo($"/order-confirmation/{OrderHeader.Id}");
     }
 }

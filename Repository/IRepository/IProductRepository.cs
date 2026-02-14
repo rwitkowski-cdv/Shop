@@ -9,6 +9,6 @@ namespace Shop.Repository.IRepository
         public Task<bool> DeleteAsync(Guid productId);
         public Task<Product> GetProductByNameAsync(string name);
         public Task<Product> GetProductByIdAsync(Guid productId);
-        public Task<IEnumerable<Product>> GetAllAsync();
+        public Task<IEnumerable<Product>> GetAllAvailableAsync();
     }
 }

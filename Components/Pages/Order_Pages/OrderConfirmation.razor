@@ -1,0 +1,50 @@
+﻿@page "/order-confirmation/{OrderId}"
+
+@if (_isLoading)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center"
+         style="z-index: 9999; background-color: #0b1121;">
+        <img src="/images/loading_page.gif" alt="loading" class="img-fluid" style="max-width: 500px;" />
+    </div>
+}
+else
+{
+    <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100 text-center">
+
+        <div class="card shadow-lg p-5 mb-5 bg-white rounded" style="max-width: 800px;">
+
+            <h1 class="display-4 text-success fw-bold">Success!</h1>
+            <h2 class="text-secondary mb-4">You are almost done with your order.</h2>
+
+            <div class="alert alert-info py-3">
+                <p class="mb-1">Your order is confirmed! Please save your order ID for any questions.</p>
+                <h5 class="fw-bold mb-0">Order ID: <span class="text-primary">@OrderId</span></h5>
+            </div>
+
+            <div class="my-4">
+                <img src="images/order_confirmation.png"
+                     alt="Order Confirmed"
+                     class="img-fluid rounded shadow-sm"
+                     style="max-width: 100%; height: auto; border: 1px solid #dee2e6;" />
+            </div>
+
+            <hr />
+
+            <div class="mt-4">
+                <a href="/" class="btn btn-outline-primary btn-lg px-5">Back to Store</a>
+            </div>
+        </div>
+
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string OrderId { get; set; }
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = false;
+    }
+}

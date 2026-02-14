@@ -111,7 +111,7 @@ else
 
     private async Task LoadProducts()
     {
-        Products = await _productRepository.GetAllAsync();
+        Products = await _productRepository.GetAllAvailableAsync();
     }
     private async Task HandleDelete(Guid productId)
     {
