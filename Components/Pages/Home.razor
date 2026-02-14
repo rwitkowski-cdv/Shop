@@ -1,7 +1,146 @@
 ﻿@page "/"
-
+@using System.Threading.Tasks
+@inject ProductService _productService
+@inject CategoryService _categoryService
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+@if (_isLoading)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center"
+         style="z-index: 9999; background-color: #0b1121;">
+        <img src="/images/loading_page.gif" alt="loading" class="img-fluid" style="max-width: 500px;" />
 
-Welcome to your new app.
+    </div>
+}
+else
+{
+    <div class="container-fluid px-0 m-0 full-width">
+        <div class="jumbotron-custom">
+            <div class="m-auto d-flex align-items-center" style="width: 400px; height: 50vh;">
+
+                <div class="d-flex align-items-center" style="width: 100%;">
+                    <input type="text" class="form-control rounded-pill"
+                           @bind:event="oninput" @bind:get="_searchText" @bind:set="SearchProducts"
+                           placeholder="Search for Items!"
+                           style="width: 100%; padding: 20px;">
+                    <span style="position: relative; left: -43px;"><i class="bi bi-search"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content px-4 m-2">
+            <ul class="nav nav-underline justify-content-center mb-2">
+                <li class="nav-item">
+                    <span class="nav-link @GetActiveCategory(Guid.Empty)" href="#" style="cursor: pointer" @onclick="() => FilterProductsByCategory(Guid.Empty)">All</span>
+                </li>
+                @foreach (var category in Categories)
+                {
+                    <li class="nav-item">
+                        <span class="nav-link @GetActiveCategory(category.Id)" href="#" style="cursor: pointer" @onclick="() => FilterProductsByCategory(category.Id)">@category.Name</span>
+                    </li>
+                }
+            </ul>
+            <div class="row mt-4 mx-1">
+
+                @foreach (var product in FilteredProducts)
+                {
+                    <div class="col-12 col-md-6 col-lg-4 pe-3 mb-5">
+                        <div class="card">
+                            <div class="mt-3 mb-2 row">
+                                <div class="col-6 px-3">
+                                    @if (!string.IsNullOrEmpty(product.SpecialTag))
+                                    {
+                                        <i class="bi bi-star btn btn-outline-success disabled"> @product.SpecialTag</i>
+                                    }
+                                </div>
+                                <div class="col-6 text-end text-danger px-3 h-3">
+                                    @product.NetAmount.ToString("C", CultureInfo.GetCultureInfo("pl-PL"))
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                {
+                                    <img class="card-img-top img-thumbnail img-rounded w-50 mt-2" src="@product.ImageUrl" style="">
+                                }
+                                else
+                                {
+                                    <img class="card-img-top img-thumbnail img-rounded w-50 mt-2" src="images/default.png" style="">
+
+                                }
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center lead text-success">@product.Name</h5>
+                                <p class="card-text mt-2">@((MarkupString)@product.Description) </p>
+                                <h4 class="text-center">
+                                    <i class="bi bi-cart3 btn btn-success text-right  px-5 form-control">Add to cart</i>
+                                </h4>
+                                <div class="d-flex justify-content-end p-2">
+                                    <i class="bi bi-tag"> @product.Tag</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+@code {
+    private IEnumerable<Product> Products = new List<Product>();
+    private IEnumerable<Product> FilteredProducts = new List<Product>();
+    private IEnumerable<Category> Categories = new List<Category>();
+    private bool _isLoading { get; set; } = true;
+    private Guid _selectedCategoryId = Guid.Empty;
+    private string _searchText = string.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadItems();
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadItems()
+    {
+        Products = await _productService.GetProductsAsync();
+        Categories = await _categoryService.GetCategoriesAsync();
+        await FilterProductsByCategory(Guid.Empty);
+    }
+
+    private async Task FilterProductsByCategory(Guid categoryId)
+    {
+        if (categoryId == Guid.Empty)
+        {
+            FilteredProducts = Products;
+            _selectedCategoryId = categoryId;
+        }
+        else
+        {
+            FilteredProducts = await _productService.FilterProductsByCategoryAsync(categoryId);
+            _selectedCategoryId = categoryId;
+            _searchText = string.Empty;
+        }
+    }
+
+    private async Task SearchProducts(string seatchText)
+    {
+        if (string.IsNullOrWhiteSpace(seatchText))
+        {
+            FilteredProducts = Products;
+        }
+        else
+        {
+            FilteredProducts = await _productService.FilterProductsByNameAsync(seatchText);
+        }
+        _searchText = seatchText;
+    }
+
+    private string GetActiveCategory(Guid categoryId)
+    {
+        return categoryId == _selectedCategoryId ? "active" : string.Empty;
+    }
+
+}

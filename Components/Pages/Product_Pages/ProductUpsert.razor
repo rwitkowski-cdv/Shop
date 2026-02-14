@@ -10,12 +10,12 @@
 @if (IsLoading)
 {
     <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
-        <img src="/images/loading_page.png" alt="loading" />
+        <img src="/images/loading_page.gif" alt="loading" />
     </div>
 }
 else
 {
-    <div class="card shadow boarder-0 mt-4">
+    <div class="card shadow boarder-0 m-4">
         <div class="card-header bg-black bg-gradient ml-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
@@ -227,7 +227,7 @@ else
         IsLoading = false;
     }
 
-    private async void DeleteImage()
+    private async Task DeleteImage()
     {
         await _fileService.DeleteImage(_directoryPath, _product.ImageUrl);
         _product.ImageUrl = null;

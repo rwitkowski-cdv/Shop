@@ -14,9 +14,7 @@
         {
             <NavBar></NavBar>
         }
-        <article class="content px-4">
-            @Body
-        </article>
+        @Body
     </main>
 </div>
 
@@ -26,7 +24,7 @@
     <span class="dismiss">🗙</span>
 </div>
 
-@code{
+@code {
     private bool _navBarVisible;
     protected override async Task OnInitializedAsync()
     {

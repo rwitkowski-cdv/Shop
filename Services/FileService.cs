@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-using Shop.Models;
 using Shop.Repository.IRepository;
 
 namespace Shop.Services

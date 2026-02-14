@@ -16,6 +16,7 @@ namespace Shop.Models
         public string? Description { get; set; }
         public bool IsAvailable { get; set; }
         public string? Tag { get; set; }
+        public string? SpecialTag { get; set; }
         public Guid CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
