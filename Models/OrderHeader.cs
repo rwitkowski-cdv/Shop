@@ -27,5 +27,6 @@ namespace Shop.Models
 
         public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
+        public override string GetDisplayName() => $"Order ID: {Id}";
     }
 }

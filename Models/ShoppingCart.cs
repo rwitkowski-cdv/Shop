@@ -14,5 +14,6 @@ namespace Shop.Models
         public Product Product { get; set; }
 
         public int Quantity { get; set; }
+        public override string GetDisplayName() => $"Shopping Cart Item: {Id}";
     }
 }

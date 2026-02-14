@@ -24,5 +24,6 @@ namespace Shop.Models
         [Column(Order = 5)]
         public virtual string Name { get; set; }
 
+        public abstract string GetDisplayName();
     }
 }

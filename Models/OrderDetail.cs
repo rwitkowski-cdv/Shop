@@ -17,5 +17,7 @@ namespace Shop.Models
         [Display(Name = "Total Price")]
         public double TotalPrice { get; set; }
 
+        public override string GetDisplayName() => $"Order Name: {Id}";
+
     }
 }

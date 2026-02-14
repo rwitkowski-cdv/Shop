@@ -37,7 +37,7 @@ namespace Shop.Data
                 .RuleFor(p => p.ModifiedById, f => f.Random.Guid())
                 .RuleFor(p => p.Name, f => f.Commerce.ProductName())
                 .RuleFor(p => p.SKU, f => f.Commerce.Ean13())
-                .RuleFor(p => p.ImageUrl, f => f.Image.LoremFlickrUrl(640,480, keywords: "computer"))
+                .RuleFor(p => p.ImageUrl, f => f.Image.PicsumUrl(640, 480))
                 .RuleFor(p => p.GrossAmount, f => decimal.Parse(f.Commerce.Price(1, 1000)))
                 .RuleFor(p => p.NetAmount, (f, p) => Math.Round(p.GrossAmount / 1.2m, 2))
                 .RuleFor(p => p.TaxAmount, (f, p) => Math.Round(p.GrossAmount - p.NetAmount, 2))

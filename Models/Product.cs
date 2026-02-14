@@ -20,5 +20,6 @@ namespace Shop.Models
         public Guid CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
+        public override string GetDisplayName() => $"PC Part: {Name}";
     }
 }
